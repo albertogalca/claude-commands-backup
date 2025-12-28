@@ -7,7 +7,7 @@ A collection of custom commands and skills for [Claude Code](https://claude.com/
 ### Commands (8)
 Commands are slash commands you invoke manually (e.g., `/commit`, `/review`).
 
-### Skills (2)
+### Skills (3)
 Skills are automatically triggered based on your request context.
 
 ---
@@ -222,6 +222,33 @@ Skills are automatically triggered when your request matches their description.
 **Auto-triggers when:** Creating landing pages, marketing sites, product pages
 
 Creates distinctive, award-winning landing pages as single-file HTML with embedded CSS/JS. Generates production-ready marketing pages with bold typography, orchestrated animations, and memorable aesthetics. Avoids generic AI patterns.
+
+---
+
+### `frontend-design`
+**Auto-triggers when:** Building web components, pages, or applications
+
+Creates distinctive, production-grade frontend interfaces with exceptional design quality. Focuses on:
+
+**Design Thinking:**
+- Bold aesthetic direction (minimal, maximalist, retro-futuristic, brutalist, etc.)
+- Purpose-driven design that solves real problems
+- Unforgettable differentiation
+
+**Frontend Aesthetics:**
+- **Typography:** Distinctive, characterful fonts (avoiding generic choices)
+- **Color:** Cohesive themes with CSS variables, dominant colors with sharp accents
+- **Motion:** High-impact animations, orchestrated page loads, scroll-triggered effects
+- **Spatial Composition:** Unexpected layouts, asymmetry, generous negative space
+- **Visual Details:** Gradient meshes, noise textures, geometric patterns, custom cursors
+
+**Implementation:**
+- Production-grade, functional code
+- Visually striking and memorable
+- Matches implementation complexity to aesthetic vision
+- Avoids generic "AI slop" aesthetics
+
+Works with HTML/CSS/JS, React, Vue, and other frameworks.
 
 ---
 
