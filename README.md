@@ -7,7 +7,7 @@ A collection of custom commands and skills for [Claude Code](https://claude.com/
 ### Commands (8)
 Commands are slash commands you invoke manually (e.g., `/commit`, `/review`).
 
-### Skills (3)
+### Skills (4)
 Skills are automatically triggered based on your request context.
 
 ---
@@ -262,6 +262,29 @@ Provides expert guidance on TypeScript's type system including:
 - Template literal types
 - Type inference patterns
 - Utility types
+
+---
+
+### `swift-development`
+**Auto-triggers when:** Building iOS, macOS, watchOS, or tvOS apps with SwiftUI
+
+Provides modern SwiftUI development guidance following Apple's latest architectural recommendations:
+
+**Core Principles:**
+- Embrace SwiftUI's declarative nature
+- Use native state management (`@State`, `@Observable`, `@Environment`)
+- Prefer `async/await` over Combine
+- Keep views focused and composable
+- Organize by feature, not by type
+
+**Key Patterns:**
+- Modern state management with `@Observable` (iOS 17+)
+- Lifecycle-aware async work with `.task` modifier
+- Simple, focused view composition
+- Swift Concurrency (async/await, actors)
+
+**Integrations:**
+- Automatically uses Context7 for code generation and documentation
 
 ---
 
