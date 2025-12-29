@@ -11,7 +11,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/skill-activation-prompt.sh"
+            "command": "/Users/albertogallegocastro/.claude/hooks/skill-activation-prompt.sh"
           }
         ]
       }
@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/.claude/hooks/post-tool-use-tracker.sh"
+            "command": "/Users/albertogallegocastro/.claude/hooks/post-tool-use-tracker.sh"
           }
         ]
       }
