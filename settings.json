@@ -11,7 +11,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/skill-activation-prompt.sh"
+            "command": "$HOME/.claude/hooks/skill-activation-prompt.sh"
           }
         ]
       }
@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/post-tool-use-tracker.sh"
+            "command": "$HOME/.claude/hooks/post-tool-use-tracker.sh"
           }
         ]
       }

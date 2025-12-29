@@ -41,8 +41,14 @@ async function main() {
         const prompt = data.prompt.toLowerCase();
 
         // Load skill rules
-        const projectDir = process.env.CLAUDE_PROJECT_DIR || '$HOME/project';
-        const rulesPath = join(projectDir, '.claude', 'skills', 'skill-rules.json');
+        // Try project-specific first, fallback to global ~/.claude
+        let rulesPath: string;
+        if (process.env.CLAUDE_PROJECT_DIR) {
+            rulesPath = join(process.env.CLAUDE_PROJECT_DIR, '.claude', 'skills', 'skill-rules.json');
+        } else {
+            const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+            rulesPath = join(homeDir, '.claude', 'skills', 'skill-rules.json');
+        }
         const rules: SkillRules = JSON.parse(readFileSync(rulesPath, 'utf-8'));
 
         const matchedSkills: MatchedSkill[] = [];
