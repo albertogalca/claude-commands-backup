@@ -715,3 +715,5 @@ MIT - Feel free to use and modify for your own workflow.
 - [Claude Code Documentation](https://code.claude.com/docs)
 - [Claude Code Skills Guide](https://code.claude.com/docs/en/skills.md)
 - [Conventional Commits](https://www.conventionalcommits.org/)
+- [Claude Code Infrastructure Showcase](https://github.com/diet103/claude-code-infrastructure-showcase/tree/main) - Example infrastructure and patterns for Claude Code
+- [Claude Code is a Beast: Tips from 6 Months of Use](https://www.reddit.com/r/ClaudeCode/comments/1oivs81/claude_code_is_a_beast_tips_from_6_months_of/) - Community insights and best practices
