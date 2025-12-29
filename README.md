@@ -2,6 +2,14 @@
 
 A collection of custom commands and skills for [Claude Code](https://claude.com/claude-code) to enhance your development workflow.
 
+## 🔥 Latest Update (2025-12-29)
+
+**Fixed: Critical UserPromptSubmit Hook Error**
+
+The `skill-activation-prompt` hook now properly falls back to global skill rules when project-specific rules don't exist. This fixes the `ENOENT` error that was causing hook failures.
+
+See [CHANGELOG.md](CHANGELOG.md) for details.
+
 ## What's Included
 
 ### Commands (11)

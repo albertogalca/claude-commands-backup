@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 interface HookInput {
@@ -42,13 +42,19 @@ async function main() {
 
         // Load skill rules
         // Try project-specific first, fallback to global ~/.claude
-        let rulesPath: string;
+        const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+        const globalRulesPath = join(homeDir, '.claude', 'skills', 'skill-rules.json');
+
+        let rulesPath = globalRulesPath;
+
+        // Check for project-specific rules if CLAUDE_PROJECT_DIR is set
         if (process.env.CLAUDE_PROJECT_DIR) {
-            rulesPath = join(process.env.CLAUDE_PROJECT_DIR, '.claude', 'skills', 'skill-rules.json');
-        } else {
-            const homeDir = process.env.HOME || process.env.USERPROFILE || '';
-            rulesPath = join(homeDir, '.claude', 'skills', 'skill-rules.json');
+            const projectRulesPath = join(process.env.CLAUDE_PROJECT_DIR, '.claude', 'skills', 'skill-rules.json');
+            if (existsSync(projectRulesPath)) {
+                rulesPath = projectRulesPath;
+            }
         }
+
         const rules: SkillRules = JSON.parse(readFileSync(rulesPath, 'utf-8'));
 
         const matchedSkills: MatchedSkill[] = [];
@@ -83,46 +89,30 @@ async function main() {
             }
         }
 
-        // Generate output if matches found
-        if (matchedSkills.length > 0) {
+        // Only output for blocking skills - suggestions should be silent
+        // Claude Code shows hook output as interruptions, so we only notify for critical issues
+        const blockingSkills = matchedSkills.filter(s => s.config.enforcement === 'block');
+
+        if (blockingSkills.length > 0) {
             let output = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-            output += '🎯 SKILL ACTIVATION CHECK\n';
+            output += '🎯 SKILL ACTIVATION REQUIRED\n';
             output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
 
-            // Group by priority
-            const critical = matchedSkills.filter(s => s.config.priority === 'critical');
-            const high = matchedSkills.filter(s => s.config.priority === 'high');
-            const medium = matchedSkills.filter(s => s.config.priority === 'medium');
-            const low = matchedSkills.filter(s => s.config.priority === 'low');
+            output += '⚠️ REQUIRED SKILLS (must use before proceeding):\n';
+            blockingSkills.forEach(s => output += `  → ${s.name}\n`);
+            output += '\n';
 
-            if (critical.length > 0) {
-                output += '⚠️ CRITICAL SKILLS (REQUIRED):\n';
-                critical.forEach(s => output += `  → ${s.name}\n`);
-                output += '\n';
-            }
-
-            if (high.length > 0) {
-                output += '📚 RECOMMENDED SKILLS:\n';
-                high.forEach(s => output += `  → ${s.name}\n`);
-                output += '\n';
-            }
-
-            if (medium.length > 0) {
-                output += '💡 SUGGESTED SKILLS:\n';
-                medium.forEach(s => output += `  → ${s.name}\n`);
-                output += '\n';
-            }
-
-            if (low.length > 0) {
-                output += '📌 OPTIONAL SKILLS:\n';
-                low.forEach(s => output += `  → ${s.name}\n`);
-                output += '\n';
-            }
-
-            output += 'ACTION: Use Skill tool BEFORE responding\n';
+            output += 'ACTION: Use Skill tool with the above skill(s) BEFORE responding\n';
             output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
 
             console.log(output);
+        }
+
+        // For non-blocking skills, log silently to stderr for debugging (won't interrupt user)
+        const suggestedSkills = matchedSkills.filter(s => s.config.enforcement !== 'block');
+        if (suggestedSkills.length > 0) {
+            const skillNames = suggestedSkills.map(s => s.name).join(', ');
+            console.error(`[DEBUG] Suggested skills: ${skillNames}`);
         }
 
         process.exit(0);
