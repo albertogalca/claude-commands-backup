@@ -4,11 +4,17 @@ A collection of custom commands and skills for [Claude Code](https://claude.com/
 
 ## What's Included
 
-### Commands (8)
+### Commands (11)
 Commands are slash commands you invoke manually (e.g., `/commit`, `/review`).
 
-### Skills (4)
+### Skills (10)
 Skills are automatically triggered based on your request context.
+
+### Hooks
+Pre-configured hooks for enhanced development workflow.
+
+### Settings
+Customized Claude Code settings for optimal experience.
 
 ---
 
@@ -25,6 +31,15 @@ cp -r claude-commands-backup/commands/* ~/.claude/commands/
 
 # Copy skills to your Claude config
 cp -r claude-commands-backup/skills/* ~/.claude/skills/
+
+# Copy hooks to your Claude config (optional)
+cp -r claude-commands-backup/hooks/* ~/.claude/hooks/
+cd ~/.claude/hooks && npm install
+
+# Copy settings (review and merge with your existing settings)
+# Note: backup your existing settings first!
+cp ~/.claude/settings.json ~/.claude/settings.json.backup
+cp claude-commands-backup/settings.json ~/.claude/settings.json
 ```
 
 ### Manual Install
@@ -109,6 +124,54 @@ Process:
 
 ---
 
+### `/dev-docs`
+**Purpose:** Create comprehensive strategic plans with structured task breakdown
+
+Creates a complete planning structure with:
+- Executive Summary
+- Current State Analysis
+- Proposed Future State
+- Implementation Phases
+- Detailed Tasks with acceptance criteria
+- Risk Assessment
+- Success Metrics
+
+Automatically creates task management directory structure in `dev/active/[task-name]/` with:
+- `[task-name]-plan.md` - The comprehensive plan
+- `[task-name]-context.md` - Key files, decisions, dependencies
+- `[task-name]-tasks.md` - Checklist for tracking progress
+
+**Usage:**
+```bash
+/dev-docs <what needs to be planned>
+```
+
+**Example:**
+```bash
+/dev-docs refactor authentication system
+```
+
+---
+
+### `/dev-docs-update`
+**Purpose:** Update dev documentation before context compaction
+
+Updates development documentation to ensure seamless continuation after context reset:
+- Active task state and progress
+- Key decisions made this session
+- Files modified and why
+- Blockers or issues discovered
+- Next immediate steps
+- Session context and learnings
+
+**Usage:**
+```bash
+/dev-docs-update
+/dev-docs-update <specific context to focus on>
+```
+
+---
+
 ### `/refactor`
 **Purpose:** Large-scale refactoring with phased execution
 
@@ -148,6 +211,26 @@ Delivers actionable recommendations with specific references.
 ```bash
 /research
 /research <specific-topic>
+```
+
+---
+
+### `/route-research-for-testing`
+**Purpose:** Map edited routes and launch tests (Laravel-specific)
+
+Automatically identifies modified route files and creates comprehensive tests:
+1. Lists changed route files from session
+2. Extracts route definitions using `php artisan route:list`
+3. Analyzes route structure (methods, middleware, controllers)
+4. Generates feature test JSON records
+5. Launches route smoke tests
+
+Ideal for ensuring all modified Laravel routes are properly tested.
+
+**Usage:**
+```bash
+/route-research-for-testing
+/route-research-for-testing /extra/path
 ```
 
 ---
@@ -288,6 +371,205 @@ Provides modern SwiftUI development guidance following Apple's latest architectu
 
 ---
 
+### `backend-dev-guidelines`
+**Auto-triggers when:** Working with Laravel backend code
+
+Comprehensive Laravel + Inertia.js backend development guide covering:
+
+**Architecture:**
+- Layered architecture (routes → controllers → services → repositories)
+- Controller patterns (invokable, resource)
+- Service layer for business logic
+- Repository pattern for complex database operations
+
+**Key Features:**
+- Eloquent ORM and relationships
+- Form Request validation
+- Middleware patterns
+- Error tracking and logging
+- Inertia.js responses
+- Testing strategies (Feature + Unit)
+
+Includes detailed examples and best practices for Laravel backend development.
+
+---
+
+### `node-backend-dev-guidelines`
+**Auto-triggers when:** Working with Node.js/Express/TypeScript backend
+
+Comprehensive guide for Node.js/Express/TypeScript microservices:
+
+**Architecture:**
+- Layered architecture (routes → controllers → services → repositories)
+- BaseController pattern
+- Dependency injection
+- Async/await error handling
+
+**Key Features:**
+- Express APIs
+- Prisma database access
+- Sentry error tracking
+- Zod validation
+- Performance monitoring
+- Migration from legacy patterns
+
+Covers testing strategies and modern Node.js backend patterns.
+
+---
+
+### `error-tracking`
+**Auto-triggers when:** Adding error handling or creating controllers
+
+Enforces comprehensive Sentry v8 error tracking and performance monitoring:
+
+**Critical Rule:**
+- ALL ERRORS MUST BE CAPTURED TO SENTRY - no exceptions
+
+**Coverage:**
+- Controller error handling
+- Artisan commands and Jobs
+- Database performance tracking
+- Performance spans
+- Workflow error tracking
+
+Provides Laravel Sentry SDK integration patterns for complete observability.
+
+---
+
+### `route-tester`
+**Auto-triggers when:** Testing Laravel routes or API endpoints
+
+Provides patterns for testing authenticated routes in Laravel:
+
+**Testing Methods:**
+- Feature tests with Pest/PHPUnit
+- Authentication testing (Sanctum, session)
+- Request/response validation
+- POST/PUT/DELETE operations
+
+**Authentication Support:**
+- Session-based authentication
+- Laravel Sanctum (SPA & API tokens)
+- Laravel Passport (OAuth2)
+
+Includes comprehensive examples for testing authenticated Laravel routes.
+
+---
+
+### `skill-developer`
+**Auto-triggers when:** Creating or modifying Claude Code skills
+
+Expert guide for creating Claude Code skills following Anthropic best practices:
+
+**Coverage:**
+- Skill structure and YAML frontmatter
+- Trigger patterns (keywords, intent, file paths, content)
+- Hook mechanisms (UserPromptSubmit, PreToolUse)
+- Enforcement levels (block, suggest, warn)
+- Progressive disclosure and the 500-line rule
+- Session tracking
+- Debugging skill activation
+
+Essential for creating effective, well-structured Claude Code skills.
+
+---
+
+## Hooks
+
+Hooks are shell commands that execute in response to events during Claude Code sessions. This configuration includes several pre-built hooks.
+
+### Available Hooks
+
+#### `skill-activation-prompt.sh`
+**Event:** UserPromptSubmit
+**Purpose:** Enhances skill activation by providing context about available skills
+
+Automatically triggers when you submit a prompt to help Claude better understand which skills might be relevant.
+
+#### `post-tool-use-tracker.sh`
+**Event:** PostToolUse (Edit, MultiEdit, Write)
+**Purpose:** Tracks file modifications during the session
+
+Maintains a log of edited files to help with:
+- Understanding what changed during a session
+- Route testing workflows
+- Context documentation
+
+#### `error-handling-reminder.ts` / `error-handling-reminder.sh`
+**Purpose:** Reminds about proper error handling patterns
+
+Ensures Sentry error tracking is properly implemented when working on error handling code.
+
+#### `tsc-check.sh`
+**Purpose:** TypeScript compilation checks
+
+Validates TypeScript code compilation for projects using TypeScript.
+
+#### `trigger-build-resolver.sh` / `stop-build-check-enhanced.sh`
+**Purpose:** Build validation hooks
+
+Ensures builds succeed before certain operations.
+
+### Installing Hooks
+
+```bash
+# Copy hooks directory
+cp -r claude-commands-backup/hooks/* ~/.claude/hooks/
+
+# Install dependencies (for TypeScript hooks)
+cd ~/.claude/hooks && npm install
+```
+
+**Note:** Hooks require configuration in `settings.json` to be active. See the Settings section below.
+
+---
+
+## Settings
+
+The repository includes two settings files:
+
+### `settings.json`
+Main Claude Code configuration including:
+- MCP server enablement (Context7, Figma, Playwright)
+- Permission defaults for tools
+- Hook configurations
+
+**Key settings:**
+```json
+{
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": ["playwright", "figma", "context7"],
+  "permissions": {
+    "allow": ["Edit:*", "Write:*", "MultiEdit:*", "NotebookEdit:*", "Bash:*"],
+    "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "UserPromptSubmit": [...],
+    "PostToolUse": [...]
+  }
+}
+```
+
+### `settings.local.json`
+Project-specific permission overrides.
+
+**Important:** Review settings before copying to ensure they match your environment and security requirements.
+
+### Applying Settings
+
+```bash
+# Backup existing settings first!
+cp ~/.claude/settings.json ~/.claude/settings.json.backup
+
+# Review the settings file
+cat claude-commands-backup/settings.json
+
+# Copy if appropriate (or manually merge)
+cp claude-commands-backup/settings.json ~/.claude/settings.json
+```
+
+---
+
 ## Backup & Restore
 
 ### Backup Your Config
@@ -296,6 +578,10 @@ Provides modern SwiftUI development guidance following Apple's latest architectu
 # From your Claude config directory
 cp -r ~/.claude/commands ~/claude-commands-backup/commands/
 cp -r ~/.claude/skills ~/claude-commands-backup/skills/
+cp -r ~/.claude/hooks ~/claude-commands-backup/hooks/
+cp ~/.claude/settings.json ~/claude-commands-backup/settings.json
+cp ~/.claude/settings.local.json ~/claude-commands-backup/settings.local.json
+
 cd ~/claude-commands-backup
 git add .
 git commit -m "Backup Claude config"
@@ -306,8 +592,18 @@ git push
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/claude-commands-backup.git
+
+# Restore commands and skills
 cp -r claude-commands-backup/commands/* ~/.claude/commands/
 cp -r claude-commands-backup/skills/* ~/.claude/skills/
+
+# Restore hooks (optional)
+cp -r claude-commands-backup/hooks/* ~/.claude/hooks/
+cd ~/.claude/hooks && npm install
+
+# Restore settings (review first!)
+cp ~/.claude/settings.json ~/.claude/settings.json.backup
+cp claude-commands-backup/settings.json ~/.claude/settings.json
 ```
 
 ---

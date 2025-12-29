@@ -174,6 +174,7 @@ struct ProfileView: View {
 ## Context7 Integration
 
 Always use Context7 when I need:
+
 - Code generation
 - Setup or configuration steps
 - Library/API documentation
