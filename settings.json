@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit:*",
+      "Write:*",
+      "MultiEdit:*",
+      "NotebookEdit:*",
+      "Bash:*"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "playwright",
+    "figma",
+    "context7"
+  ],
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/albertogallegocastro/.claude/hooks/skill-activation-prompt.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/albertogallegocastro/.claude/hooks/post-tool-use-tracker.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "image-sanitizer@image-sanitizer-marketplace": true
+  }
+}
