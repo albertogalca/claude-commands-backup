@@ -18,3 +18,4 @@ hooks/node_modules
 paste-cache
 changelog.md
 .DS_Store
+tasks

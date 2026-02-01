@@ -1,254 +1,135 @@
 #!/bin/bash
+
+###############################################################################
+# Post Tool Use Tracker Hook
+#
+# This hook runs after Edit, Write, or MultiEdit tools complete successfully.
+# It tracks modified files and determines which checks/tests should be run.
+#
+# Hook Type: PostToolUse
+###############################################################################
+
 set -e
 
-# Post-tool-use hook that tracks edited files and their repos
-# This runs after Edit, MultiEdit, or Write tools complete successfully
+# Configuration
+CACHE_DIR=".claude/cache/session"
+SESSION_ID="${CLAUDE_SESSION_ID:-default}"
+MODIFIED_FILES_LOG="$CACHE_DIR/$SESSION_ID-modified-files.log"
+CHECKS_LOG="$CACHE_DIR/$SESSION_ID-checks-needed.log"
 
+# Ensure cache directory exists
+mkdir -p "$CACHE_DIR"
 
-# Read tool information from stdin
-tool_info=$(cat)
+# Get the file path from the tool result
+FILE_PATH="${TOOL_FILE_PATH:-}"
+TOOL_NAME="${TOOL_NAME:-}"
 
-
-# Extract relevant data
-tool_name=$(echo "$tool_info" | jq -r '.tool_name // empty')
-file_path=$(echo "$tool_info" | jq -r '.tool_input.file_path // empty')
-session_id=$(echo "$tool_info" | jq -r '.session_id // empty')
-
-
-# Skip if not an edit tool or no file path
-if [[ ! "$tool_name" =~ ^(Edit|MultiEdit|Write)$ ]] || [[ -z "$file_path" ]]; then
-    exit 0  # Exit 0 for skip conditions
+# Only process Edit, Write, or MultiEdit tools
+if [[ "$TOOL_NAME" != "Edit" && "$TOOL_NAME" != "Write" && "$TOOL_NAME" != "MultiEdit" ]]; then
+  exit 0
 fi
 
-# Skip markdown files and blade templates
-if [[ "$file_path" =~ \.(md|markdown)$ ]]; then
-    exit 0  # Exit 0 for skip conditions
+# Skip if no file path provided
+if [[ -z "$FILE_PATH" ]]; then
+  exit 0
 fi
 
-# Skip blade templates (Laravel views)
-if [[ "$file_path" =~ \.blade\.php$ ]]; then
-    exit 0  # Exit 0 for skip conditions
+# Skip markdown and documentation files
+if [[ "$FILE_PATH" =~ \.(md|txt|json)$ ]]; then
+  exit 0
 fi
 
-# Create cache directory in project
-cache_dir="$CLAUDE_PROJECT_DIR/.claude/tsc-cache/${session_id:-default}"
-mkdir -p "$cache_dir"
+# Log the modified file with timestamp
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+echo "[$TIMESTAMP] $FILE_PATH" >> "$MODIFIED_FILES_LOG"
 
-# Function to detect repo from file path
-detect_repo() {
-    local file="$1"
-    local project_root="$CLAUDE_PROJECT_DIR"
+###############################################################################
+# Determine what checks are needed based on file type
+###############################################################################
 
-    # Remove project root from path
-    local relative_path="${file#$project_root/}"
+detect_checks_needed() {
+  local file="$1"
+  local checks=()
 
-    # Extract first directory component
-    local repo=$(echo "$relative_path" | cut -d'/' -f1)
+  # Ruby files (models, controllers, services, etc.)
+  if [[ "$file" =~ \.rb$ ]]; then
+    # Skip spec files themselves
+    if [[ ! "$file" =~ _spec\.rb$ ]]; then
+      checks+=("rubocop")
+      checks+=("rspec")
 
-    # Common project directory patterns
-    case "$repo" in
-        # Frontend variations (including Laravel resources)
-        frontend|client|web|ui)
-            echo "$repo"
-            ;;
-        # Laravel resources (JS/TS components for Inertia)
-        resources)
-            # Laravel resources directory
-            echo "$repo"
-            ;;
-        # Laravel backend directories
-        app|routes|config|bootstrap)
-            echo "$repo"
-            ;;
-        # Backend variations
-        backend|server|api|src|services)
-            echo "$repo"
-            ;;
-        # Database
-        database|prisma|migrations)
-            echo "$repo"
-            ;;
-        # Package/monorepo structure
-        packages)
-            # For monorepos, get the package name
-            local package=$(echo "$relative_path" | cut -d'/' -f2)
-            if [[ -n "$package" ]]; then
-                echo "packages/$package"
-            else
-                echo "$repo"
-            fi
-            ;;
-        # Examples directory
-        examples)
-            local example=$(echo "$relative_path" | cut -d'/' -f2)
-            if [[ -n "$example" ]]; then
-                echo "examples/$example"
-            else
-                echo "$repo"
-            fi
-            ;;
-        *)
-            # Check if it's a source file in root
-            if [[ ! "$relative_path" =~ / ]]; then
-                echo "root"
-            else
-                echo "unknown"
-            fi
-            ;;
-    esac
+      # If it's a model, suggest running model specs
+      if [[ "$file" =~ app/models/ ]]; then
+        checks+=("rspec:models")
+      fi
+
+      # If it's a controller, suggest running request specs
+      if [[ "$file" =~ app/controllers/ ]]; then
+        checks+=("rspec:requests")
+      fi
+
+      # If it's a migration, suggest db:migrate
+      if [[ "$file" =~ db/migrate/ ]]; then
+        checks+=("db:migrate")
+      fi
+    fi
+  fi
+
+  # JavaScript/Stimulus files
+  if [[ "$file" =~ \.(js|jsx|ts|tsx)$ ]]; then
+    checks+=("javascript:check")
+  fi
+
+  # CSS/Tailwind files
+  if [[ "$file" =~ \.(css|scss)$ ]]; then
+    checks+=("tailwind:build")
+  fi
+
+  # Config files
+  if [[ "$file" =~ config/routes\.rb$ ]]; then
+    checks+=("routes:check")
+  fi
+
+  # Gemfile
+  if [[ "$file" =~ Gemfile$ ]]; then
+    checks+=("bundle:check")
+  fi
+
+  # Output checks (deduplicated)
+  for check in "${checks[@]}"; do
+    echo "$check"
+  done | sort -u
 }
 
-# Function to get build command for repo
-get_build_command() {
-    local repo="$1"
-    local project_root="$CLAUDE_PROJECT_DIR"
-    local repo_path="$project_root/$repo"
+# Detect and log needed checks
+checks=$(detect_checks_needed "$FILE_PATH")
 
-    # For Laravel app directory, check if it's a Laravel project (check for artisan in root)
-    if [[ "$repo" == "app" ]] || [[ "$repo" == "routes" ]] || [[ "$repo" == "config" ]]; then
-        if [[ -f "$project_root/artisan" ]]; then
-            # This is a Laravel project - no build command for PHP files
-            # But we might want to clear cache
-            echo "cd $project_root && php artisan optimize:clear"
-            return
-        fi
-    fi
+if [[ -n "$checks" ]]; then
+  echo "# Checks needed for: $FILE_PATH" >> "$CHECKS_LOG"
+  echo "$checks" | while read -r check; do
+    echo "  - $check" >> "$CHECKS_LOG"
+  done
+  echo "" >> "$CHECKS_LOG"
+fi
 
-    # For Laravel resources directory (Inertia + React)
-    if [[ "$repo" == "resources" ]]; then
-        if [[ -f "$project_root/package.json" ]]; then
-            if grep -q '"build"' "$project_root/package.json" 2>/dev/null; then
-                # Detect package manager
-                if [[ -f "$project_root/pnpm-lock.yaml" ]]; then
-                    echo "cd $project_root && pnpm build"
-                elif [[ -f "$project_root/package-lock.json" ]]; then
-                    echo "cd $project_root && npm run build"
-                elif [[ -f "$project_root/yarn.lock" ]]; then
-                    echo "cd $project_root && yarn build"
-                else
-                    echo "cd $project_root && npm run build"
-                fi
-                return
-            fi
-        fi
-    fi
+###############################################################################
+# Provide helpful context to Claude (optional output)
+###############################################################################
 
-    # Check if package.json exists and has a build script
-    if [[ -f "$repo_path/package.json" ]]; then
-        if grep -q '"build"' "$repo_path/package.json" 2>/dev/null; then
-            # Detect package manager (prefer pnpm, then npm, then yarn)
-            if [[ -f "$repo_path/pnpm-lock.yaml" ]]; then
-                echo "cd $repo_path && pnpm build"
-            elif [[ -f "$repo_path/package-lock.json" ]]; then
-                echo "cd $repo_path && npm run build"
-            elif [[ -f "$repo_path/yarn.lock" ]]; then
-                echo "cd $repo_path && yarn build"
-            else
-                echo "cd $repo_path && npm run build"
-            fi
-            return
-        fi
-    fi
+# Count modified files in this session
+FILE_COUNT=$(wc -l < "$MODIFIED_FILES_LOG" 2>/dev/null || echo "0")
 
-    # Special case for database with Prisma
-    if [[ "$repo" == "database" ]] || [[ "$repo" =~ prisma ]]; then
-        if [[ -f "$repo_path/schema.prisma" ]] || [[ -f "$repo_path/prisma/schema.prisma" ]]; then
-            echo "cd $repo_path && npx prisma generate"
-            return
-        fi
-    fi
+# Only show reminder after multiple files have been modified
+if [[ "$FILE_COUNT" -gt 3 ]]; then
+  # Get unique checks needed
+  UNIQUE_CHECKS=$(cat "$CHECKS_LOG" 2>/dev/null | grep "^  -" | sort -u | wc -l)
 
-    # No build command found
+  if [[ "$UNIQUE_CHECKS" -gt 0 ]]; then
     echo ""
-}
-
-# Function to get TSC command for repo
-get_tsc_command() {
-    local repo="$1"
-    local project_root="$CLAUDE_PROJECT_DIR"
-    local repo_path="$project_root/$repo"
-
-    # For Laravel PHP directories, check for PHPStan or Psalm
-    if [[ "$repo" == "app" ]] || [[ "$repo" == "routes" ]] || [[ "$repo" == "config" ]]; then
-        if [[ -f "$project_root/artisan" ]]; then
-            # Check for PHPStan
-            if [[ -f "$project_root/phpstan.neon" ]] || [[ -f "$project_root/phpstan.neon.dist" ]]; then
-                echo "cd $project_root && vendor/bin/phpstan analyse --no-progress --error-format=table"
-                return
-            fi
-            # Check for Psalm
-            if [[ -f "$project_root/psalm.xml" ]] || [[ -f "$project_root/psalm.xml.dist" ]]; then
-                echo "cd $project_root && vendor/bin/psalm --no-progress"
-                return
-            fi
-            # Check for Laravel Pint (code style)
-            if [[ -f "$project_root/vendor/bin/pint" ]]; then
-                echo "cd $project_root && vendor/bin/pint --test"
-                return
-            fi
-        fi
-    fi
-
-    # For Laravel resources (Inertia + React), check project root for tsconfig
-    if [[ "$repo" == "resources" ]]; then
-        if [[ -f "$project_root/tsconfig.json" ]]; then
-            if [[ -f "$project_root/tsconfig.app.json" ]]; then
-                echo "cd $project_root && npx tsc --project tsconfig.app.json --noEmit"
-            else
-                echo "cd $project_root && npx tsc --noEmit"
-            fi
-            return
-        fi
-    fi
-
-    # Check if tsconfig.json exists
-    if [[ -f "$repo_path/tsconfig.json" ]]; then
-        # Check for Vite/React-specific tsconfig
-        if [[ -f "$repo_path/tsconfig.app.json" ]]; then
-            echo "cd $repo_path && npx tsc --project tsconfig.app.json --noEmit"
-        else
-            echo "cd $repo_path && npx tsc --noEmit"
-        fi
-        return
-    fi
-
-    # No TypeScript config found
+    echo "📝 Modified $FILE_COUNT files in this session."
+    echo "Consider running checks: bin/rubocop, bundle exec rspec"
     echo ""
-}
-
-# Detect repo
-repo=$(detect_repo "$file_path")
-
-# Skip if unknown repo
-if [[ "$repo" == "unknown" ]] || [[ -z "$repo" ]]; then
-    exit 0  # Exit 0 for skip conditions
+  fi
 fi
 
-# Log edited file
-echo "$(date +%s):$file_path:$repo" >> "$cache_dir/edited-files.log"
-
-# Update affected repos list
-if ! grep -q "^$repo$" "$cache_dir/affected-repos.txt" 2>/dev/null; then
-    echo "$repo" >> "$cache_dir/affected-repos.txt"
-fi
-
-# Store build commands
-build_cmd=$(get_build_command "$repo")
-tsc_cmd=$(get_tsc_command "$repo")
-
-if [[ -n "$build_cmd" ]]; then
-    echo "$repo:build:$build_cmd" >> "$cache_dir/commands.txt.tmp"
-fi
-
-if [[ -n "$tsc_cmd" ]]; then
-    echo "$repo:tsc:$tsc_cmd" >> "$cache_dir/commands.txt.tmp"
-fi
-
-# Remove duplicates from commands
-if [[ -f "$cache_dir/commands.txt.tmp" ]]; then
-    sort -u "$cache_dir/commands.txt.tmp" > "$cache_dir/commands.txt"
-    rm -f "$cache_dir/commands.txt.tmp"
-fi
-
-# Exit cleanly
 exit 0
