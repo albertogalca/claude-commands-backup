@@ -1,27 +1,4 @@
 {
-  "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node .claude/hooks/skill-activation-prompt.js"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|MultiEdit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": ".claude/hooks/post-tool-use-tracker.sh"
-          }
-        ]
-      }
-    ]
-  },
   "enabledPlugins": {
     "interface-design@interface-design": true,
     "vanilla-rails@iuhoay-skills": true,
