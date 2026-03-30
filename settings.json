@@ -23,6 +23,17 @@
     ]
   },
   "enabledPlugins": {
-    "interface-design@interface-design": true
-  }
+    "interface-design@interface-design": true,
+    "vanilla-rails@iuhoay-skills": true,
+    "impeccable@impeccable": true
+  },
+  "extraKnownMarketplaces": {
+    "impeccable": {
+      "source": {
+        "source": "github",
+        "repo": "pbakaus/impeccable"
+      }
+    }
+  },
+  "skipDangerousModePermissionPrompt": true
 }

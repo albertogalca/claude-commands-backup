@@ -19,3 +19,8 @@ paste-cache
 changelog.md
 .DS_Store
 tasks
+image-cache
+sessions
+dev-kit
+backups
+
