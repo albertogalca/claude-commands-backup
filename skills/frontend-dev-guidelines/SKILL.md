@@ -480,10 +480,6 @@ For complete examples, see [resources/complete-examples.md](resources/complete-e
 
 ---
 
-## Related Skills
-
-- **backend-dev-guidelines**: Rails backend patterns that Inertia consumes
-
 ---
 
 **Skill Status**: Updated for Inertia.js + Rails + React + Tailwind CSS v4 stack

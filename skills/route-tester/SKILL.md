@@ -565,9 +565,7 @@ end
 
 ## Related Skills
 
-- Use **backend-dev-guidelines** for controller/route patterns
 - Use **error-tracking** for testing error handling
-- Use **rails-dev** for sustainable Rails patterns
 
 ## Key Files
 

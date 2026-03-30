@@ -603,6 +603,4 @@ production:
 
 ## Related Skills
 
-- Use **backend-dev-guidelines** for Rails patterns
 - Use **route-tester** for testing error handling
-- Use **rails-dev** for sustainable Rails development

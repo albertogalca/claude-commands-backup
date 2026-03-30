@@ -154,17 +154,32 @@ Read files, check against rules below. Output concise but comprehensive—sacrif
 - Hardcoded date/number formats (use `Intl.*`)
 - `autoFocus` without clear justification
 
+### Visual Design
+
+- Inconsistent spacing values, overflow issues, alignment problems, z-index conflicts
+- Mixed font families, weights, or sizes; line height issues; missing font fallbacks
+- Contrast ratio below 4.5:1; missing hover/focus states; dark mode inconsistencies
+- Missing button states (disabled, loading, hover, active, focus)
+- Missing form field states (error, success, disabled)
+- Inconsistent borders, shadows, or icon sizing
+
 ## Output Format
 
-Group by file. Use `file:line` format (VS Code clickable). Terse findings.
+Group by file. Use `file:line` format (VS Code clickable). Terse findings. Categorize by severity.
 
 ```text
 ## src/Button.tsx
 
-src/Button.tsx:42 - icon button missing aria-label
-src/Button.tsx:18 - input lacks label
+CRITICAL
+src/Button.tsx:42 - icon button missing aria-label (WCAG 4.1.2)
+src/Button.tsx:18 - input lacks label (WCAG 1.3.1)
+
+SERIOUS
 src/Button.tsx:55 - animation missing prefers-reduced-motion
 src/Button.tsx:67 - transition: all → list properties
+
+MODERATE
+src/Button.tsx:80 - inconsistent spacing (gap-3 vs gap-4 siblings)
 
 ## src/Modal.tsx
 
@@ -175,5 +190,7 @@ src/Modal.tsx:34 - "..." → "…"
 
 ✓ pass
 ```
+
+End with: `SUMMARY: X critical, X serious, X moderate — Score: XX/100`
 
 State issue + location. Skip explanation unless fix non-obvious. No preamble.

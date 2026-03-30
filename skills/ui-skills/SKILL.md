@@ -76,9 +76,7 @@ When invoked, apply these opinionated constraints for building better interfaces
 
 ## Design
 
-- NEVER use gradients unless explicitly requested
-- NEVER use purple or multicolor gradients
-- NEVER use glow effects as primary affordances
+- Avoid generic AI aesthetics (gradient-heavy, purple-dominant, glow-as-affordance patterns)
 - SHOULD use Tailwind CSS default shadow scale unless explicitly requested
 - MUST give empty states one clear next action
 - SHOULD limit accent color usage to one per view

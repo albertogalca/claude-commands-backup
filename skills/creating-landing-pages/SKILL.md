@@ -43,16 +43,12 @@ Choose the most unexpected yet appropriate option.
 
 ## Anti-Patterns
 
-Never use:
+Avoid generic AI aesthetics — see `frontend-design` skill for the full list. Key ones for landing pages:
 
-- Purple/blue gradients on white backgrounds
-- Inter, Roboto, Arial, Open Sans, system-ui fonts
 - Generic hero-CTA-features-testimonials template flow
 - Abstract blobs or generic geometric shapes
-- #6366F1 or similar overused accent colors
-- 16px border-radius on everything
-- Drop shadows on all cards
-- Lorem ipsum placeholder text
+- Overused fonts (Inter, Roboto, Arial, Open Sans, system-ui)
+- Lorem ipsum placeholder text — always generate realistic copy
 
 ## Technical Output
 
