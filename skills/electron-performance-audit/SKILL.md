@@ -108,6 +108,10 @@ Grep pattern="^import\s+" glob="**/main.{js,ts,mjs,cjs}" output_mode="content"
 # Missing code splitting — no dynamic imports anywhere
 Grep pattern="import\(" glob="**/*.{js,ts,jsx,tsx}" output_mode="count"
 
+# React.lazy/Suspense usage for route/view-based code splitting
+Grep pattern="React\.lazy|lazy\(\s*\(\)\s*=>" glob="**/*.{jsx,tsx}" output_mode="files_with_matches"
+Grep pattern="<Suspense" glob="**/*.{jsx,tsx}" output_mode="files_with_matches"
+
 # Heavy dependencies loaded eagerly (check if these are dynamically imported)
 Grep pattern="require\(['\"](sharp|canvas|pdf-|ffmpeg|sqlite|better-sqlite)" glob="**/*.{js,ts}" -i
 
@@ -126,6 +130,15 @@ Glob pattern="**/preload.{js,ts,mjs,cjs}"
 Glob pattern="**/webpack.config.{js,ts,mjs}"
 Glob pattern="**/vite.config.{js,ts,mjs}"
 Glob pattern="**/electron-builder.{yml,json,js}"
+
+# Vendor chunk splitting — check if manualChunks or splitChunks configured
+Grep pattern="(manualChunks|splitChunks|vendor)" glob="**/webpack.config.*" output_mode="content"
+Grep pattern="(manualChunks|splitChunks|vendor)" glob="**/vite.config.*" output_mode="content"
+Grep pattern="(manualChunks|splitChunks|vendor)" glob="**/electron.vite.config.*" output_mode="content"
+
+# V8 snapshots — check if electron-link or mksnapshot is used for startup optimization
+Grep pattern="(electron-link|mksnapshot|snapshot-blob|v8-snapshot)" glob="**/package.json"
+Grep pattern="snapshot" glob="**/electron-builder.{yml,json,js}" output_mode="content"
 ```
 
 **Common false positives:**
@@ -286,6 +299,20 @@ Grep pattern="node-gyp|napi|node-addon-api" glob="**/package.json"
 # Check if performance monitoring exists (positive signal)
 Grep pattern="(contentTracing|performance\.mark|performance\.measure|PerformanceObserver)" glob="**/*.{js,ts}" output_mode="files_with_matches"
 
+# Interaction latency measurement — click, keypress, scroll latency tracking
+# Article recommends measuring: click→visual update, keypress→visual update, scroll→visual update
+Grep pattern="(click.latency|keypress.latency|scroll.latency|input.latency|typing.lag)" glob="**/*.{js,ts,jsx,tsx}" output_mode="files_with_matches"
+
+# PerformanceObserver for Long Tasks API (detects main thread blocking >50ms)
+Grep pattern="PerformanceObserver" glob="**/*.{js,ts,jsx,tsx}" output_mode="content"
+Grep pattern="longtask" glob="**/*.{js,ts,jsx,tsx}" output_mode="files_with_matches"
+
+# Time-to-feature-paint measurement (app init → feature visible)
+Grep pattern="(first.paint|first.contentful|time.to|feature.paint)" glob="**/*.{js,ts,jsx,tsx}" output_mode="files_with_matches"
+
+# App metrics collection (Electron's built-in app.getAppMetrics)
+Grep pattern="getAppMetrics|getCPUUsage|getProcessMemoryInfo" glob="**/*.{js,ts}" output_mode="files_with_matches"
+
 # Electron DevTools enabled in production (should be disabled)
 Grep pattern="openDevTools" glob="**/*.{js,ts}" output_mode="content"
 # FALSE POSITIVE: behind NODE_ENV or #if DEBUG check
@@ -327,7 +354,7 @@ Before reporting ANY finding as a performance issue:
 
 | Grade | Criteria                                                                                                                                       |
 | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| A     | Dynamic imports, no sync IPC, Worker Threads for heavy work, proper cleanup everywhere, optimistic UI, local persistence, performance monitoring |
+| A     | Dynamic imports + React.lazy, vendor chunk splitting, no sync IPC, Worker Threads for heavy work, proper cleanup everywhere, optimistic UI, local persistence, interaction latency monitoring, Long Tasks API |
 | B     | Mostly async, no sync IPC, some dynamic imports, most cleanup handled, some loading states                                                      |
 | C     | Mixed sync/async fs, no sync IPC, some missing cleanup, no dynamic imports, basic loading states                                                |
 | D     | Sync IPC present, multiple sync fs calls in hot paths, event listener leaks, no loading states, no code splitting                               |
@@ -339,7 +366,7 @@ Grade each scanned category independently:
 
 | Category                 | What to Evaluate                                                                |
 | ------------------------ | ------------------------------------------------------------------------------- |
-| Startup Performance      | Code splitting? Lazy loading? Bundle optimized? BrowserWindow show strategy?    |
+| Startup Performance      | Code splitting? React.lazy? Vendor chunks? V8 snapshots? Bundle optimized? BrowserWindow show strategy? |
 | Main Thread Blocking     | Sync fs/IPC/dialog calls? Heavy computation on main thread? Worker usage?       |
 | IPC Patterns             | Async invoke? Batched calls? Reasonable payload sizes? Error handling?           |
 | Memory & Resource Leaks  | Listener cleanup? Timer cleanup? Process cleanup? Cache bounds? System events?  |
@@ -387,11 +414,17 @@ Overall: [grade] (Startup [grade] | Main Thread [grade] | IPC [grade] | Memory [
 
 ## Measurement Status
 
-| Capability                  | Status |
-| --------------------------- | ------ |
-| Performance monitoring      | ✓/✗    |
-| DevTools disabled in prod   | ✓/✗    |
-| Console logging controlled  | ✓/✗    |
+| Capability                         | Status |
+| ---------------------------------- | ------ |
+| Performance marks/measures         | ✓/✗    |
+| Interaction latency tracking       | ✓/✗    |
+| Long Tasks API (>50ms detection)   | ✓/✗    |
+| App metrics (CPU/memory)           | ✓/✗    |
+| V8 snapshots                       | ✓/✗    |
+| Vendor chunk splitting             | ✓/✗    |
+| React.lazy code splitting          | ✓/✗    |
+| DevTools disabled in prod          | ✓/✗    |
+| Console logging controlled         | ✓/✗    |
 
 ## Remediation Examples
 
