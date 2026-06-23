@@ -24,3 +24,5 @@ sessions
 dev-kit
 backups
 mcp-needs-auth-cache.json
+cache
+settings.local.json

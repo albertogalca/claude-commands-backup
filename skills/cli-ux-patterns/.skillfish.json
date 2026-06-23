@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "cli-ux-patterns",
+  "owner": "geoffjay",
+  "repo": "claude-plugins",
+  "path": "plugins/rust-cli-developer/skills/cli-ux-patterns",
+  "branch": "main",
+  "sha": "cde57f3c05067f3dddd3117805d4724a387ec921",
+  "source": "manual"
+}

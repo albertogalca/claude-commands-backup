@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "browser-runtime-performance-profiling",
+  "owner": "agentient",
+  "repo": "vibekit",
+  "path": "plugins/performance-tools/skills/browser-runtime-performance-profiling",
+  "branch": "master",
+  "sha": "bca7b01bba7941353afc470682555f0acbfcd19a",
+  "source": "manual"
+}

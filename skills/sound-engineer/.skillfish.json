@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "sound-engineer",
+  "owner": "erichowens",
+  "repo": "some_claude_skills",
+  "path": ".claude/skills/sound-engineer",
+  "branch": "main",
+  "sha": "85869dc7ba031c86266bbeda98d3ac0eb60451a8",
+  "source": "manual"
+}

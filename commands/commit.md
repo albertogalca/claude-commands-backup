@@ -1,3 +1,7 @@
+---
+model: sonnet
+---
+
 # Commit Command
 
 This slash command is a Git commit helper that:

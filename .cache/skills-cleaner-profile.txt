@@ -1,0 +1,12 @@
+
+  Skill Usage Report (all time)
+
+  Skills                          Calls      Out  Usage   CacheR   AvgTime
+  /skills-cleaner:profile-skills      1      418   100%    89.8K      9.9s
+
+  Plugins                         Calls      Out  Usage   CacheR   AvgTime
+  skills-cleaner                      1      418   100%    89.8K      9.9s
+
+  Total: 418 out · 89.8K cacheR | 1 calls | 1 skills | 9.9s runtime
+  Period: 2026-06-20
+

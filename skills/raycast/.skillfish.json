@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "raycast",
+  "owner": "bendrucker",
+  "repo": "claude",
+  "path": "plugins/raycast/skills/raycast",
+  "branch": "main",
+  "sha": "dfe301762a57f96c6f5483002d5a4bfae7ce628b",
+  "source": "manual"
+}
