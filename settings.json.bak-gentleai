@@ -1,0 +1,140 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.config/gh/**)",
+      "Read(~/.gnupg/**)",
+      "Read(**/credentials*)",
+      "Read(**/secrets*)",
+      "Bash(* | bash)",
+      "Bash(* | sh)",
+      "Bash(ssh:*)",
+      "Bash(scp:*)",
+      "Bash(nc:*)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/albertogallegocastro/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"/Users/albertogallegocastro/.claude/plugins/cache/ponytail/ponytail/4.7.0/hooks/ponytail-statusline.sh\""
+  },
+  "enabledPlugins": {
+    "vanilla-rails@iuhoay-skills": true,
+    "impeccable@impeccable": true,
+    "claude-seo@agricidaniel-claude-seo": true,
+    "ai-security@claude-code-plugins-dev": true,
+    "liquid-glass@liquid-glass-skills": true,
+    "ponytail@ponytail": true,
+    "skills-cleaner@skills-cleaner": true,
+    "humanize@claude-settings": true,
+    "setup-fastlane@fastlane-skill": true,
+    "beta@fastlane-skill": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "radar-suite@radar-suite": true,
+    "cloudflare@cloudflare": true
+  },
+  "extraKnownMarketplaces": {
+    "impeccable": {
+      "source": {
+        "source": "github",
+        "repo": "pbakaus/impeccable",
+        "ref": "b5af865d84bc1ba1b8bc7104488bc7db50977029"
+      }
+    },
+    "evo-hq-evo": {
+      "source": {
+        "source": "github",
+        "repo": "evo-hq/evo",
+        "ref": "f70a7e30cef240077e8253ff199fc61003f4ee71"
+      }
+    },
+    "radar-suite": {
+      "source": {
+        "source": "github",
+        "repo": "Terryc21/radar-suite"
+      }
+    },
+    "agricidaniel-claude-seo": {
+      "source": {
+        "source": "github",
+        "repo": "AgriciDaniel/claude-seo",
+        "ref": "v2.0.0"
+      }
+    },
+    "claude-code-plugins-dev": {
+      "source": {
+        "source": "github",
+        "repo": "charlesjones-dev/claude-code-plugins-dev",
+        "ref": "v1.5.0"
+      }
+    },
+    "liquid-glass-skills": {
+      "source": {
+        "source": "github",
+        "repo": "haider-nawaz/liquid-glass-skill"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail",
+        "ref": "v4.7.0"
+      }
+    },
+    "skills-cleaner": {
+      "source": {
+        "source": "github",
+        "repo": "amebahead/skills-cleaner",
+        "ref": "v1.2.5"
+      }
+    },
+    "claude-settings": {
+      "source": {
+        "source": "github",
+        "repo": "fcakyon/claude-codex-settings"
+      }
+    },
+    "fastlane-skill": {
+      "source": {
+        "source": "github",
+        "repo": "greenstevester/fastlane-skill"
+      }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": {
+        "source": "github",
+        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
+      }
+    },
+    "cloudflare": {
+      "source": {
+        "source": "github",
+        "repo": "cloudflare/skills"
+      }
+    }
+  },
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "remoteControlAtStartup": false,
+  "agentPushNotifEnabled": false,
+  "skipAutoPermissionPrompt": true
+}

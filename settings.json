@@ -1,55 +1,66 @@
 {
   "permissions": {
-    "defaultMode": "auto",
     "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(~/.ssh/**)",
-      "Read(~/.aws/**)",
-      "Read(~/.config/gh/**)",
-      "Read(~/.gnupg/**)",
-      "Read(**/credentials*)",
-      "Read(**/secrets*)",
-      "Bash(* | bash)",
-      "Bash(* | sh)",
-      "Bash(ssh:*)",
-      "Bash(scp:*)",
-      "Bash(nc:*)"
+      "Bash(rm -rf /)",
+      "Bash(sudo rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(sudo rm -rf ~)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Edit(.env)",
+      "Edit(.env.*)",
+      "Read(.ssh/*)",
+      "Edit(.ssh/*)",
+      "Read(.credentials/*)",
+      "Edit(.credentials/*)",
+      "Read(Library/Keychains/*)",
+      "Edit(Library/Keychains/*)",
+      "Read(.aws/credentials)",
+      "Edit(.aws/credentials)",
+      "Read(.config/gh/hosts.yml)",
+      "Edit(.config/gh/hosts.yml)",
+      "Read(**/*.pem)",
+      "Edit(**/*.pem)",
+      "Read(**/*.key)",
+      "Edit(**/*.key)",
+      "Read(**/secrets/*)",
+      "Edit(**/secrets/*)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "gentle-ai skill-registry refresh --quiet --no-gitignore --cwd \"${CLAUDE_PROJECT_DIR:-$PWD}\" || true"
+          }
+        ]
+      }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"/Users/albertogallegocastro/.claude/plugins/cache/ponytail/ponytail/4.7.0/hooks/ponytail-statusline.sh\""
+  },
   "enabledPlugins": {
-    "interface-design@interface-design": true,
-    "vanilla-rails@iuhoay-skills": true,
-    "impeccable@impeccable": true,
-    "evo@evo-hq-evo": true,
-    "claude-seo@agricidaniel-claude-seo": true,
     "ai-security@claude-code-plugins-dev": true,
+    "beta@fastlane-skill": true,
+    "claude-seo@agricidaniel-claude-seo": true,
+    "engram@engram": true,
+    "humanize@claude-settings": true,
     "liquid-glass@liquid-glass-skills": true,
     "ponytail@ponytail": true,
-    "skills-cleaner@skills-cleaner": true
+    "radar-suite@radar-suite": true,
+    "setup-fastlane@fastlane-skill": true,
+    "skills-cleaner@skills-cleaner": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "vanilla-rails@iuhoay-skills": true
   },
   "extraKnownMarketplaces": {
-    "impeccable": {
-      "source": {
-        "source": "github",
-        "repo": "pbakaus/impeccable",
-        "ref": "b5af865d84bc1ba1b8bc7104488bc7db50977029"
-      }
-    },
-    "evo-hq-evo": {
-      "source": {
-        "source": "github",
-        "repo": "evo-hq/evo",
-        "ref": "f70a7e30cef240077e8253ff199fc61003f4ee71"
-      }
-    },
-    "radar-suite": {
-      "source": {
-        "source": "github",
-        "repo": "Terryc21/radar-suite",
-        "ref": "v2.1.1"
-      }
-    },
     "agricidaniel-claude-seo": {
       "source": {
         "source": "github",
@@ -64,11 +75,35 @@
         "ref": "v1.5.0"
       }
     },
+    "claude-settings": {
+      "source": {
+        "source": "github",
+        "repo": "fcakyon/claude-codex-settings"
+      }
+    },
+    "engram": {
+      "source": {
+        "source": "github",
+        "repo": "Gentleman-Programming/engram"
+      }
+    },
+    "evo-hq-evo": {
+      "source": {
+        "source": "github",
+        "repo": "evo-hq/evo",
+        "ref": "f70a7e30cef240077e8253ff199fc61003f4ee71"
+      }
+    },
+    "fastlane-skill": {
+      "source": {
+        "source": "github",
+        "repo": "greenstevester/fastlane-skill"
+      }
+    },
     "liquid-glass-skills": {
       "source": {
         "source": "github",
-        "repo": "haider-nawaz/liquid-glass-skill",
-        "ref": "2c1b2789c30dc2c9208f3b9a3811d42480714577"
+        "repo": "haider-nawaz/liquid-glass-skill"
       }
     },
     "ponytail": {
@@ -78,16 +113,32 @@
         "ref": "v4.7.0"
       }
     },
+    "radar-suite": {
+      "source": {
+        "source": "github",
+        "repo": "Terryc21/radar-suite"
+      }
+    },
     "skills-cleaner": {
       "source": {
         "source": "github",
         "repo": "amebahead/skills-cleaner",
         "ref": "v1.2.5"
       }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": {
+        "source": "github",
+        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
+      }
     }
   },
+  "outputStyle": "Gentleman",
   "effortLevel": "high",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true,
-  "tui": "fullscreen"
+  "theme": "auto",
+  "remoteControlAtStartup": false,
+  "agentPushNotifEnabled": false,
+  "skipAutoPermissionPrompt": true
 }
