@@ -26,3 +26,9 @@ backups
 mcp-needs-auth-cache.json
 cache
 settings.local.json
+.env
+.env.*
+feedback
+state
+ms-playwright
+runtime-state.json

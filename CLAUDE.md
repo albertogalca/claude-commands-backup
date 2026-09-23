@@ -14,5 +14,6 @@
 
 ## Writing
 
-- Apply @~/Projects/cantimplora/.claude/skills/voice-dna/SKILL.md to all prose I will publish or send: posts, landing copy, app store text, emails, changelogs, README prose, docs. Automatic. Do not ask.
+- Apply @~/Projects/cantimplora/.claude/skills/voice-dna/SKILL.md to all prose I will publish or send: landing copy, app store text, emails, changelogs, README prose, docs. Automatic. Do not ask.
+- Posts, newsletters and pieces are mine to write. For those, interview me, organize, correct and suggest cuts in this voice, but don't draft them (studio/voice.md).
 - Exception: your status reports to me stay ASD-STE100 (see Reporting above).

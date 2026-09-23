@@ -1,0 +1,134 @@
+{
+  "version": 2,
+  "plugins": {
+    "image-sanitizer@image-sanitizer-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/image-sanitizer-marketplace/image-sanitizer/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-01-03T06:56:54.526Z",
+        "lastUpdated": "2026-01-03T06:56:54.526Z"
+      }
+    ],
+    "vanilla-rails@iuhoay-skills": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/iuhoay-skills/vanilla-rails/1.6.0",
+        "version": "1.6.0",
+        "installedAt": "2026-02-11T18:55:54.687Z",
+        "lastUpdated": "2026-02-11T18:55:54.687Z",
+        "gitCommitSha": "b9a795899cd9600c96c42f794756d19cb9e1e607"
+      }
+    ],
+    "claude-seo@agricidaniel-claude-seo": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/agricidaniel-claude-seo/claude-seo/2.0.0",
+        "version": "2.0.0",
+        "installedAt": "2026-06-04T08:31:33.454Z",
+        "lastUpdated": "2026-06-04T08:31:33.454Z",
+        "gitCommitSha": "dabfc1abb4ca9a4d7967242bf00d52593be56ed1"
+      }
+    ],
+    "ai-security@claude-code-plugins-dev": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/claude-code-plugins-dev/ai-security/1.5.0",
+        "version": "1.5.0",
+        "installedAt": "2026-06-05T11:34:37.587Z",
+        "lastUpdated": "2026-06-05T11:34:37.587Z",
+        "gitCommitSha": "2533f452a9898d38987571986ba5354d70d41b86"
+      }
+    ],
+    "liquid-glass@liquid-glass-skills": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/liquid-glass-skills/liquid-glass/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-06-09T16:48:36.990Z",
+        "lastUpdated": "2026-06-09T16:48:36.990Z",
+        "gitCommitSha": "2c1b2789c30dc2c9208f3b9a3811d42480714577"
+      }
+    ],
+    "ponytail@ponytail": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/ponytail/ponytail/4.7.0",
+        "version": "4.7.0",
+        "installedAt": "2026-06-17T04:51:36.562Z",
+        "lastUpdated": "2026-06-17T04:51:36.562Z",
+        "gitCommitSha": "45f7d2f83fb430a65fd512a98ad7b14d79e06636"
+      }
+    ],
+    "skills-cleaner@skills-cleaner": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/skills-cleaner/skills-cleaner/1.2.5",
+        "version": "1.2.5",
+        "installedAt": "2026-06-20T09:07:49.276Z",
+        "lastUpdated": "2026-06-20T09:07:49.276Z",
+        "gitCommitSha": "b4e3b075019ae87e0043101a534858f8909ba9ef"
+      }
+    ],
+    "humanize@claude-settings": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/claude-settings/humanize/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-07-21T10:32:41.413Z",
+        "lastUpdated": "2026-07-21T10:32:41.413Z",
+        "gitCommitSha": "7c9b5ff0177b0658331acc265bda5d4078e95a7a"
+      }
+    ],
+    "setup-fastlane@fastlane-skill": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/fastlane-skill/setup-fastlane/1.1.5",
+        "version": "1.1.5",
+        "installedAt": "2026-08-05T09:44:07.109Z",
+        "lastUpdated": "2026-08-05T09:44:07.109Z",
+        "gitCommitSha": "df44877684fd885cad6cd153ca58466b74eb9485"
+      }
+    ],
+    "beta@fastlane-skill": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/fastlane-skill/beta/1.1.5",
+        "version": "1.1.5",
+        "installedAt": "2026-08-05T09:44:07.935Z",
+        "lastUpdated": "2026-08-05T09:44:07.935Z",
+        "gitCommitSha": "df44877684fd885cad6cd153ca58466b74eb9485"
+      }
+    ],
+    "ui-ux-pro-max@ui-ux-pro-max-skill": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.13.0",
+        "version": "2.13.0",
+        "installedAt": "2026-08-16T19:03:08.251Z",
+        "lastUpdated": "2026-08-16T19:03:08.251Z",
+        "gitCommitSha": "a38d04c3d5c298c851dbe5e6ee1965ee3de42cb5"
+      }
+    ],
+    "radar-suite@radar-suite": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/radar-suite/radar-suite/2.1.2",
+        "version": "2.1.2",
+        "installedAt": "2026-08-23T09:51:17.356Z",
+        "lastUpdated": "2026-08-23T09:51:17.356Z",
+        "gitCommitSha": "0c79a39f819017e516351e5a63cfeb5be246c8cb"
+      }
+    ],
+    "engram@engram": [
+      {
+        "scope": "user",
+        "installPath": "/Users/albertogallegocastro/.claude/plugins/cache/engram/engram/0.1.1",
+        "version": "0.1.1",
+        "installedAt": "2026-08-31T11:04:36.394Z",
+        "lastUpdated": "2026-08-31T11:04:36.394Z",
+        "gitCommitSha": "23bc1ca5e087c3d9f7eeb9984c844b457f701a0b"
+      }
+    ]
+  }
+}

@@ -1,8 +1,8 @@
 # The Massive Position-Me Report Template
 
-When delivering your final review, you MUST format your response exactly like this. You must act as the ultimate, ruthless consultant. Do not skip sections. Provide a massive, multi-page teardown. 
+Format the final review like this. Fill every section; if a section has no findings, say so in one line. 
 
-CRITICAL RULE: DO NOT USE EMOJIS ANYWHERE IN THIS REPORT.
+No emojis in the report.
 
 ---
 

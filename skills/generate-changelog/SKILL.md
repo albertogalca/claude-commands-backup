@@ -97,9 +97,9 @@ Normalize the version to match how existing headings in that file are written (w
    - **Keep each bullet short.** A sentence or two. Say what it does and the one detail that matters — drop the step-by-step walkthrough and the "works the same as before" caveats. This holds for the desktop file too: no length limit is not a licence to ramble.
    - For a mobile entry, check it against the App Store rules above before you move on — 4,000 characters, plain text, no other platforms.
 
-6. **Humanize the copy.** Invoke the `humanize-copy` skill on each changelog you touched so the new entries read like a person wrote them, not a release-notes generator. This rewrites in place.
+6. **Humanize the copy.** Edit the new entries in place against `voice-dna` (the writing rules loaded from `~/.claude/CLAUDE.md`), so they read like Alberto wrote them, not a release-notes generator. Keep the App Store rules above for the mobile file.
 
-7. **Commit.** Invoke the `commit` skill to commit all repo changes.
+7. **Commit.** Invoke the `commit` skill. It runs the repo pre-commit checks, then commits the changelog work. Changelog-only edits are one `📝 docs:` commit; if the run also touched unrelated files, let `commit` split them.
 
 ## Notes
 

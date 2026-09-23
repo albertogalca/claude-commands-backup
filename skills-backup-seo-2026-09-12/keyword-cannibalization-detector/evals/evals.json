@@ -1,0 +1,45 @@
+{
+  "skill_name": "keyword-cannibalization-detector",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Can you check my site allbirds.com for keyword cannibalization? I want to know if any of my pages are competing with each other. Keywords to check: wool runners, wool sneakers, running shoes, tree runners, how to wash wool shoes, are wool shoes good for running, mens shoes, sustainable sneakers. Location United States, English.",
+      "expected_output": "Pulls each keyword's SERP (depth 100), finds all allbirds.com URLs per keyword, classifies keyword intent and page types, and produces a PDF + CSV. Commercial terms where two commercial pages rank close should be flagged 'strong candidate' with a consolidate/301 fix; a product page + blog far apart on an informational term should be 'harmless overlap' with 'no action'. Priority orders commercial high-volume conflicts first.",
+      "files": [],
+      "assertions": [
+        {"text": "Calls serp_organic_live_advanced once per keyword with depth 100 and the given location/language"},
+        {"text": "Only keywords with 2+ same-domain URLs are enriched (intent/volume/page-type); single-URL keywords are marked clean and skipped"},
+        {"text": "Verdicts combine ranking proximity WITH keyword intent and page type — never position alone"},
+        {"text": "At least one product+blog co-ranking far apart on a non-commercial term is NOT flagged as cannibalization (labelled harmless overlap / no action)"},
+        {"text": "Produces both a PDF report and a CSV worklist; CSV has one row per candidate keyword with positions, page types, gap, verdict, reason, and a specific recommended fix"},
+        {"text": "Priority ordering puts commercial, high-volume, close-ranked conflicts at the top"},
+        {"text": "Every flagged case carries a plain-English reason tied to its actual positions/intent/page types"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "cannibalization audit for shop.example.co.uk — here's my keyword list in a file: keywords.txt. use United Kingdom / English. I mainly care about the commercial terms, want to know which pages to merge.",
+      "expected_output": "Reads keywords from keywords.txt, runs the full detection, and returns a prioritized worklist. For commercial keywords with two pages close in rank, recommends consolidate/merge + 301 naming the specific weaker/stronger URLs. Confirms scope and expected API cost before making calls.",
+      "files": ["keywords.txt"],
+      "assertions": [
+        {"text": "Reads and dedupes keywords from the provided file"},
+        {"text": "Shows a scope/spend confirmation with expected API request counts and waits for approval before any API call"},
+        {"text": "Commercial close-ranked pairs get a merge + 301 recommendation that names the stronger and weaker URL"},
+        {"text": "Uses location_name 'United Kingdom' and language_code 'en' on the SERP and volume calls"},
+        {"text": "Output CSV is sorted by priority with the costliest commercial conflicts first"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I think two of my blog posts are fighting each other on Google. Domain is myfitnessblog.com, and the keywords are: best protein powder, protein powder for weight loss, how much protein per day, creatine vs protein. English, United States. Are they actually cannibalizing or am I imagining it?",
+      "expected_output": "Runs detection and gives an honest verdict. For two informational posts ranking high and tight on an informational term, flags 'strong candidate' and recommends differentiating angles or merging into one guide + 301. For informational posts far apart or serving different intents, says clearly it is NOT cannibalization. Does not over-flag.",
+      "files": [],
+      "assertions": [
+        {"text": "Distinguishes genuine blog-vs-blog cannibalization (high and tight) from harmless co-ranking (far apart / different sub-intents)"},
+        {"text": "For a real informational conflict, recommends differentiating the articles or consolidating into one guide + 301 — not a generic 'add keywords'"},
+        {"text": "Gives a clear yes/no style verdict per keyword in plain English rather than only raw positions"},
+        {"text": "Does not flag a keyword where only one myfitnessblog.com URL ranks"}
+      ]
+    }
+  ]
+}
